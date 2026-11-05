@@ -64,7 +64,7 @@
    - 💥 **DAMAGED**: Broken components, cracked casings, crushed packaging.
    - ⚠️ **QUALITY**: Flimsy builds, fake goods, defective parts, poor materials.
    - 🎧 **SERVICE**: Unresponsive support, refund disputes, rude representatives.
-3. **Automated Escalation & Triage**: Computes priority levels and triggers immediate high-visibility banner warnings for `URGENT` tickets to prevent customer churn.
+3. **Automated Escalation & Triage**: Computes priority levels and triggers immediate high-visibility alert banners on the dashboard for `URGENT` reviews to alert store owners of unhappy buyers.
 4. **Live Store Analytics Dashboard**:
    - **Storefront Simulator:** Test submissions directly within the UI.
    - **Key KPI Counters:** Total Reviews, Negative Review Rate (%), Urgent Complaints, Satisfied Buyers.
@@ -77,16 +77,15 @@
 
 ## 🧠 Triage & Logic Engine
 
-The triage logic in `main.py` classifies reviews into four distinct escalation tiers:
+The triage logic in `main.py` evaluates the star rating, sentiment, and count of pain points to assign a priority status. Here is **exactly what the code executes**:
 
-| Priority | Criteria | Recommended Store Action |
+| Priority Level | Classification Trigger | What the Application Actually Does |
 | :--- | :--- | :--- |
-| 🚨 **URGENT** | Rating $\le 2$ **OR** (Negative Sentiment AND $\ge 2$ Pain Points) | Immediate manager reach-out within 1 hour to prevent chargeback. |
-| 🔴 **HIGH** | Negative Sentiment (Rating $> 2$ or $< 2$ pain points) | Standard support ticket creation for resolution. |
-| 🟡 **NORMAL** | Neutral Sentiment with average rating | Logged for routine feedback review. |
-| 🟢 **LOW** | Positive Sentiment or Star Rating $\ge 4$ | Eligible for automated testimonial marketing. |
+| 🚨 **URGENT** | Star rating $\le 2$ <br>**OR** (Negative sentiment **AND** $\ge 2$ pain points) | • Tags record as `URGENT` in SQLite.<br>• Displays a prominent red alert banner (`st.error`) on the Streamlit dashboard: *"URGENT SUPPORT ACTION REQUIRED: Customer left a complaint on [Product]! Reach out to prevent chargeback."*<br>• Increments the **"Urgent Complaints"** KPI card on the dashboard.<br>• Labels the review as `URGENT` in the customer history table. |
+| 🔴 **HIGH** | Negative sentiment (with rating $> 2$ and $< 2$ pain points) | • Tags record as `HIGH` in SQLite.<br>• Increments the **"Negative Review Rate"** KPI metric.<br>• Plots the review in the **"Complaints by Product"** bar chart.<br>• Labels the review as `HIGH` in the customer history table. |
+| 🟡 **NORMAL** | Standard positive review with moderate rating | • Tags record as `NORMAL` in SQLite.<br>• Displays standard confirmation banner and stores record for historical analysis. |
+| 🟢 **LOW** | Neutral sentiment **OR** Star rating $\ge 4$ | • Tags record as `LOW` in SQLite.<br>• Increments the **"Satisfied Buyers"** KPI metric.<br>• Categorized as low-risk feedback in the history table. |
 
----
 
 
 ## 📁 Project Structure
@@ -113,7 +112,7 @@ python3 --version
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
+git clone https://github.com/<your-username>/customer-review-intelligence.git
 cd "Customer Review Intelligence"
 ```
 
