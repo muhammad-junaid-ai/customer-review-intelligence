@@ -1,14 +1,23 @@
+import os
 import streamlit as st
 import pandas as pd
 import requests
 
-# FastAPI Backend Endpoint
-API_URL = "http://127.0.0.1:8000/api/reviews"
+# FastAPI Backend Endpoint (auto-handles both root domain and full /api/reviews path)
+raw_api_url = os.getenv("API_URL", "http://127.0.0.1:8000/api/reviews").strip().rstrip("/")
+if raw_api_url.endswith("/api/reviews"):
+    API_URL = raw_api_url
+    BASE_URL = raw_api_url[:-len("/api/reviews")].rstrip("/")
+else:
+    API_URL = f"{raw_api_url}/api/reviews"
+    BASE_URL = raw_api_url
+
+DOCS_URL = os.getenv("DOCS_URL", f"{BASE_URL}/docs")
 
 st.set_page_config(page_title="Store Review Intelligence", page_icon="🛍️", layout="wide")
 
 st.title("🛍️ Store Review Intelligence & Support Dashboard")
-st.caption("Standalone review intelligence engine integrated with your online store. Automatically triages customer feedback, flags product defects, and escalates unhappy buyers.")
+st.caption(f"Standalone review intelligence engine integrated with your online store. Automatically triages customer feedback, flags product defects, and escalates unhappy buyers. • [📖 View API Documentation (Swagger)]({DOCS_URL})")
 
 # Session state to hold store reviews fetched from API
 if "reviews" not in st.session_state:
@@ -75,7 +84,7 @@ with st.form("store_review_form", clear_on_submit=False):
                 else:
                     st.error(f"API Error {response.status_code}: {response.text}")
             except requests.exceptions.ConnectionError:
-                st.error("🚨 Cannot reach FastAPI backend! Is `uvicorn main:app --reload` running on port 8000?")
+                st.error(f"🚨 Cannot reach FastAPI backend at `{API_URL}`! Please ensure your backend service is running on Railway.")
         else:
             st.warning("Please fill in Customer Email, Product Name, and Review text.")
 
@@ -122,3 +131,5 @@ if not df.empty:
             st.bar_chart(neg_df["product"].value_counts())
         else:
             st.info("No negative reviews recorded yet!")
+else:
+    st.info("ℹ️ No reviews loaded yet. Fill out and submit the review form above to see live charts and metrics!")
