@@ -26,10 +26,13 @@ def analyze_review(customer: str, product: str, rating: int, text: str):
     all_scores = analyzer.polarity_scores(text)
     score = all_scores['compound']
 
-    if score > 0.05:
-        sentiment = "POSITIVE"
-    elif score < -0.05:
+    # Hybrid Sentiment Logic: Combines star rating with NLP text polarity
+    if rating <= 2 or score < -0.05:
         sentiment = "NEGATIVE"
+    elif rating >= 4 and score >= -0.05:
+        sentiment = "POSITIVE"
+    elif score > 0.05:
+        sentiment = "POSITIVE"
     else:
         sentiment = "NEUTRAL"
 
