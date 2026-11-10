@@ -101,7 +101,7 @@ The triage logic in `main.py` evaluates the star rating, sentiment, and count of
 ## 📁 Project Structure
 
 ```text
-Customer Review Intelligence/
+customer-review-intelligence/
 ├── app.py              # Streamlit dashboard & storefront simulator UI
 ├── main.py             # FastAPI backend, VADER analysis & triage engine
 ├── database.py         # SQLite connection, WAL mode configuration & CRUD operations
@@ -120,10 +120,18 @@ Ensure you have **Python 3.9+** and **pip** installed:
 python3 --version
 ```
 
-### 2. Clone the Repository
+### 2. Download or Clone the Repository
+
+**Option A — Clone using Git:**
 ```bash
 git clone https://github.com/muhammad-junaid-ai/customer-review-intelligence.git
-cd "Customer Review Intelligence"
+cd customer-review-intelligence
+```
+
+**Option B — Download as ZIP from GitHub:**
+If you downloaded and extracted the repository ZIP file from GitHub, enter the extracted folder:
+```bash
+cd customer-review-intelligence-main
 ```
 
 ### 3. Create & Activate Virtual Environment
