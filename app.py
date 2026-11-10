@@ -22,7 +22,7 @@ st.caption(f"Standalone review intelligence engine integrated with your online s
 # Session state to hold store reviews fetched from API
 if "reviews" not in st.session_state:
     try:
-        # Fetches initial reviews from GET /api/v1/reviews
+        # Fetches initial reviews from GET /api/reviews
         res = requests.get(API_URL)
         if res.status_code == 200:
              #creating reviews key and assigning it list of dictionaries
@@ -59,7 +59,7 @@ with st.form("store_review_form", clear_on_submit=False):
 
     if submitted:
         if customer.strip() and product.strip() and review_text.strip():
-            # Send HTTP POST to FastAPI backend endpoint @app.post("/api/v1/reviews")
+            # Send HTTP POST to FastAPI backend endpoint @app.post("/api/reviews")
             payload = {
                 "customer": customer,
                 "product": product,
@@ -78,7 +78,7 @@ with st.form("store_review_form", clear_on_submit=False):
                     c3.metric("Priority Triage", result["priority"])
                     
                     if result["priority"] == "URGENT":
-                        st.error(f"🚨 **URGENT SUPPORT ACTION REQUIRED:** Customer **{result['customer']}** left a 1-star complaint on **'{result['product']}'**! Reach out to prevent chargeback.")
+                        st.error(f"🚨 **URGENT SUPPORT ACTION REQUIRED:** Customer **{result['customer']}** left a {result['rating']}-star complaint on **'{result['product']}'**! Reach out to prevent chargeback.")
                     else:
                         st.success(f"✅ Review from **{result['customer']}** analyzed and saved to store dashboard!")
                 else:
