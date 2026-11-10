@@ -1,11 +1,13 @@
 # 🛍️ Customer Review Intelligence & Support Dashboard
 
-
+> 🌐 **Live Application:** [https://customer-review.up.railway.app/](https://customer-review.up.railway.app/)
+>
 > An end-to-end review intelligence engine and automated triage dashboard designed for modern e-commerce stores. It continuously ingests customer feedback, applies rule-based NLP sentiment analysis, isolates critical failure domains (shipping, damage, quality, support), and automatically flags urgent issues to prevent chargebacks and customer churn.
 
 ---
 
 ## 📑 Table of Contents
+- [Live Demo](#-live-demo)
 - [The Problem & The Solution](#-the-problem--the-solution)
 - [System Architecture & Workflow](#-system-architecture--workflow)
 - [Key Features](#-key-features)
@@ -13,8 +15,16 @@
 - [Project Structure](#-project-structure)
 - [Installation & Setup](#-installation--setup)
 - [Running the Application](#-running-the-application)
+- [Environment Variables](#-environment-variables)
 - [API Reference](#-api-reference)
 - [Database Schema](#-database-schema)
+
+---
+
+## 🌐 Live Demo
+
+The application is deployed and live on Railway:
+👉 **[https://customer-review.up.railway.app/](https://customer-review.up.railway.app/)**
 
 ---
 
@@ -58,7 +68,7 @@
 
 ## ✨ Key Features
 
-1. **Automated Sentiment Analysis**: Utilizes VADER (Valence Aware Dictionary and sEntiment Reasoner) to compute sentiment polarity scores (`compound > 0.05` = POSITIVE, `compound < -0.05` = NEGATIVE, otherwise NEUTRAL).
+1. **Hybrid Sentiment Engine**: Combines VADER (Valence Aware Dictionary and sEntiment Reasoner) NLP polarity scoring with customer star ratings. This prevents false positives by ensuring low star ratings (≤ 2 stars) are strictly categorized as `NEGATIVE` and high star ratings (≥ 4 stars) with positive text are categorized as `POSITIVE`.
 2. **Domain-Specific Pain Point Detection**: Detects keywords across 4 critical retail failure categories:
    - 🚚 **SHIPPING**: Delivery delays, missing parcels, tracking errors.
    - 💥 **DAMAGED**: Broken components, cracked casings, crushed packaging.
@@ -112,7 +122,7 @@ python3 --version
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/customer-review-intelligence.git
+git clone https://github.com/muhammad-junaid-ai/customer-review-intelligence.git
 cd "Customer Review Intelligence"
 ```
 
@@ -151,6 +161,17 @@ uvicorn main:app --reload --port 8000
 streamlit run app.py
 ```
 * **Dashboard URL:** `http://localhost:8501`
+
+---
+
+## 🔧 Environment Variables
+
+The Streamlit dashboard can be configured using environment variables:
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `API_URL` | `http://127.0.0.1:8000/api/reviews` | URL to the FastAPI `/api/reviews` endpoint. |
+| `DOCS_URL` | `{BASE_URL}/docs` | Link to the interactive Swagger API documentation. |
 
 ---
 
